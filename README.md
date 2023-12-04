@@ -3,6 +3,8 @@
 
 Basic Calculator application using react js 
 
+### Node version 
+v18.18.2
 
 ## Run Locally
 
