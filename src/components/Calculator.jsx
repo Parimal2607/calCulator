@@ -11,6 +11,12 @@ const Calculator = () => {
   const [notNum, setNotNum] = useState(false);
   const [nan, setNan] = useState(false);
 
+/**
+ * Generates a function comment for the given function body.
+ *
+ * @param {Event} e - The event object.
+ * @return {void} This function does not return anything.
+ */
   const inputNum = (e) => {
     if (curState.includes(".") && e.target.innerText === ".") return;
     if (total) {
@@ -24,12 +30,21 @@ const Calculator = () => {
   };
 
   useEffect(() => {
+    // console.log(preState, "pre");
+    // console.log(curState, "cur");
+    // console.log(input, "input");
     setInput(curState);
   }, [curState]);
 
   useEffect(() => {
     setInput("0");
   }, []);
+  /**
+   * Sets the operator type and performs the necessary calculations.
+   *
+   * @param {Event} e - The event object representing the button click
+   * @return {void} This function does not return a value
+   */
   const operatorType = (e) => {
     setTotal(false);
     setOperator(e.target.innerText);
@@ -42,10 +57,17 @@ const Calculator = () => {
     }
   };
 
+  /**
+   * Calculates the result of a mathematical operation based on the operator and operands.
+   *
+   * @param {Event} e - The event object.
+   * @return {void} No return value.
+   */
   const equals = (e) => {
-    if (e?.target.innerText === "=") {
-      setTotal(true);
-    }
+    // if (e?.target.innerText === "=") {
+    //   setTotal(true);
+      
+    // }
     let cal;
     switch (operator) {
       case "/":
@@ -70,11 +92,29 @@ const Calculator = () => {
       default:
         return;
     }
-  
-    setInput("");
-    setPreState(cal);
+    if (e?.target.innerText === "=") {
+      setTotal(true);
+      setInput("");
+      console.log("true");
+      // console.log(curState, "cur");
+      // console.log(preState, "pre");
+      setPreState(cal);
+    }
+    else{
+      console.log("false");
+      setInput("");
+      setPreState(cal);
+      setCurState("")
+    }
+    
   };
 
+  /**
+   * Toggles the sign of the current state.
+   *
+   * @param {string} curState - The current state of the calculator.
+   * @return {void} This function does not return a value.
+   */
   const minusPlus = () => {
     if (curState.charAt(0) === "-") {
       setCurState(curState.substring(1));
@@ -83,12 +123,22 @@ const Calculator = () => {
     }
   };
 
+  /**
+   * Updates the current state value by converting it to a percentage.
+   *
+   * @return {void} No return value.
+   */
   const percent = () => {
     preState
       ? setCurState(String((parseFloat(curState) / 100) * preState))
       : setCurState(String(parseFloat(curState) / 100));
   };
 
+  /**
+   * Resets the state variables to their initial values.
+   *
+   * @return {void} No return value
+   */
   const reset = () => {
     setPreState("");
     setCurState("");
