@@ -29,9 +29,6 @@ const Calculator = () => {
   };
 
   useEffect(() => {
-    // console.log(preState, "pre");
-    // console.log(curState, "cur");
-    // console.log(input, "input");
     setInput(curState);
   }, [curState]);
 
@@ -94,9 +91,6 @@ const Calculator = () => {
     if (e?.target.innerText === "=") {
       setTotal(true);
       setInput("");
-      console.log("true");
-      // console.log(curState, "cur");
-      // console.log(preState, "pre");
       setPreState(cal);
     } else {
       console.log("false");
