@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { calVal } from "../utils/constant";
-import NumberFormat from "react-number-format";
-import { motion } from "framer-motion";
+import Button from "./Button";
 const Calculator = () => {
   const [preState, setPreState] = useState("");
   const [curState, setCurState] = useState("");
@@ -11,12 +10,12 @@ const Calculator = () => {
   const [notNum, setNotNum] = useState(false);
   const [nan, setNan] = useState(false);
 
-/**
- * Generates a function comment for the given function body.
- *
- * @param {Event} e - The event object.
- * @return {void} This function does not return anything.
- */
+  /**
+   * Generates a function comment for the given function body.
+   *
+   * @param {Event} e - The event object.
+   * @return {void} This function does not return anything.
+   */
   const inputNum = (e) => {
     if (curState.includes(".") && e.target.innerText === ".") return;
     if (total) {
@@ -66,7 +65,7 @@ const Calculator = () => {
   const equals = (e) => {
     // if (e?.target.innerText === "=") {
     //   setTotal(true);
-      
+
     // }
     let cal;
     switch (operator) {
@@ -99,14 +98,12 @@ const Calculator = () => {
       // console.log(curState, "cur");
       // console.log(preState, "pre");
       setPreState(cal);
-    }
-    else{
+    } else {
       console.log("false");
       setInput("");
       setPreState(cal);
-      setCurState("")
+      setCurState("");
     }
-    
   };
 
   /**
@@ -144,53 +141,63 @@ const Calculator = () => {
     setCurState("");
     setInput("0");
     setNotNum(false);
-    setNan(false)
+    setNan(false);
   };
+  const calculateFontSize = () => {
+    const baseFontSize = 44;
+    const fontSizeMultiplier = 2;
+    const maxLength = 5;
+    const maxWidth = 234;
 
+    const adjustedFontSize =
+      baseFontSize - fontSizeMultiplier * Math.max(input.length - maxLength, 0);
+
+    // Calculate the adjusted width based on the adjusted font size
+    const adjustedWidth = input.length * (adjustedFontSize / baseFontSize);
+
+    // If the adjusted width exceeds the maximum width, further reduce the font size
+    if (adjustedWidth > maxWidth) {
+      const reductionFactor = maxWidth / adjustedWidth;
+      return (adjustedFontSize * reductionFactor).toFixed(2) + "px";
+    }
+
+    // Ensure the font size is not larger than the base font size
+    return Math.min(adjustedFontSize, baseFontSize) + "px";
+  };
   return (
     <div className="calculator">
-      <div className="blur-effect"></div>
       <div className="cal-screen pb-0">
         <div className="screen">
-          <motion.div
-            className="cal-upper-screen"
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-          >
+            <div className="upper-dot">
+              <div className="red-dot"></div>
+              <div className="yellow-dot"></div>
+              <div className="green-dot"></div>
+            </div>
+          <div className="cal-upper-screen">
             {!notNum && !nan ? (
               input !== "" || input === "0" ? (
-                <NumberFormat
-                  value={input}
-                  displayType={"text"}
-                  thousandSeparator={true}
-                />
+                <span style={{ fontSize: calculateFontSize() }}>{input}</span>
               ) : (
-                <NumberFormat
-                  value={preState}
-                  displayType={"text"}
-                  thousandSeparator={true}
-                />
+                <span style={{ fontSize: calculateFontSize() }}>
+                  {preState}
+                </span>
               )
             ) : nan ? (
               <span>NaN</span>
             ) : (
               <span>Infinity</span>
             )}
-          </motion.div>
+          </div>
         </div>
         <div className="cal-btn-part">
           <div className="upper-section">
             {calVal.map((val, index) => (
-              <motion.button
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
-                whileTap={{ scale: 0.1 }}
+              <Button
                 key={index}
-                className={val.className}
+                btnClass={val.className}
                 value={val.value}
-                onClick={
+                btnValue={val.name}
+                ClickFunction={
                   val.value === "AC"
                     ? reset
                     : val.value === "+/-"
@@ -206,20 +213,10 @@ const Calculator = () => {
                     ? equals
                     : inputNum
                 }
-              >
-                {val.name}
-              </motion.button>
+              />
             ))}
           </div>
         </div>
-        <motion.div
-          className="cal-footer"
-          initial={{ y: "350%" }}
-          animate={{ y: "0" }}
-          transition={{ duration: 1 }}
-        >
-          <div className="inner-line"></div>
-        </motion.div>
       </div>
     </div>
   );

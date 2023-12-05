@@ -1,3 +1,4 @@
+// import CustomSvg from "../components/common/CustomSvg";
 export const calVal = [
   {
     name: "AC",
@@ -15,7 +16,7 @@ export const calVal = [
     value: "%",
   },
   {
-    name: "/",
+    name: "÷",
     className: "btn btn-2",
     value: "/",
   },
@@ -91,7 +92,7 @@ export const calVal = [
   },
   {
     name: "=",
-    className: "btn btn-2",
+    className: "btn btn-4",
     value: "=",
   },
 ];
