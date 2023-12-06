@@ -3,7 +3,7 @@
 $primary: #FA9F09;
 $secondary: #454647;
 $black: #111;
-$white: #FFF;
+$white: #e8e1e1;
 $black-light: #404142;
 $grey: #736e6e;
 
@@ -11,11 +11,14 @@ $grey: #736e6e;
     height: 48px;
     min-width: 58px;
     border-radius: 0px;
-    font-size: 20px;
-    font-weight: 500;
+    font-size: 22px;
+    font-weight: 400;
     display: flex;
     justify-content: center;
     align-items: center;
+    svg{
+        width: 22px !important;
+    }
 }
 
 @mixin dot {
