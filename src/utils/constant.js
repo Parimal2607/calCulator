@@ -1,4 +1,4 @@
-// import CustomSvg from "../components/common/CustomSvg";
+import CustomSvg from "../components/common/CustomSvg";
 export const calVal = [
   {
     name: "AC",
@@ -7,16 +7,19 @@ export const calVal = [
   },
   {
     name: "+/-",
+    icon: "plusMinusIcon",
     className: "btn btn-1",
     value: "+/-",
   },
   {
     name: "%",
+    icon:"percentIcon",
     className: "btn btn-1",
     value: "%",
   },
   {
-    name: "÷",
+    name: "/",
+    icon: "dividedIcon",
     className: "btn btn-2",
     value: "/",
   },
@@ -37,6 +40,7 @@ export const calVal = [
   },
   {
     name: "X",
+    icon: "multiIcon",
     className: "btn btn-2",
     value: "X",
   },
@@ -57,6 +61,7 @@ export const calVal = [
   },
   {
     name: "-",
+    icon:"minusIcon",
     className: "btn btn-2",
     value: "-",
   },
@@ -77,6 +82,7 @@ export const calVal = [
   },
   {
     name: "+",
+    icon:"plusIcon",
     className: "btn btn-2",
     value: "+",
   },
@@ -92,6 +98,7 @@ export const calVal = [
   },
   {
     name: "=",
+    icon:"equalIcon",
     className: "btn btn-4",
     value: "=",
   },

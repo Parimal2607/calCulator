@@ -4,33 +4,24 @@ $primary: #FA9F09;
 $secondary: #454647;
 $black: #111;
 $white: #FFF;
-$black-light: #575859;
-$grey: #737474;
+$black-light: #404142;
+$grey: #736e6e;
 
 @mixin btn {
     height: 48px;
     min-width: 58px;
     border-radius: 0px;
-    font-size: 18px;
-    font-weight: 400;
+    font-size: 20px;
+    font-weight: 500;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
-    overflow: hidden;
+}
 
-    &:hover,
-    &:focus {
-        &::before {
-            animation: shine 0.85s;
-        }
-    }
-
-    @keyframes shine {
-        100% {
-            left: 125%;
-        }
-    }
+@mixin dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
 }
 
 * {
@@ -51,41 +42,23 @@ body {
     align-items: center;
     overflow: hidden;
     position: relative;
-
-    .blur-effect {
-        backdrop-filter: saturate(2) blur(14px);
-        -webkit-backdrop-filter: saturate(2) blur(14px);
-        position: absolute;
-        width: 100%;
-        height: 100vh;
-    }
+    background-color: black;
 
     .cal-screen {
-        background-color: $secondary;
+        backdrop-filter: blur(7px) saturate(188%);
+        -webkit-backdrop-filter: blur(7px) saturate(188%);
+        background-color: rgba(69, 70, 71, 0.59);
+        border-radius: 12px;
         position: relative;
         z-index: 9;
         max-width: 235px;
-        border-radius: 12px;
         overflow: hidden;
-
-        @media (max-width: "575px") {
-            height: 100%;
-            width: 100%;
-            border-radius: 0;
-        }
 
         .cal-footer {
             display: flex;
             justify-content: center;
             margin-top: 46px;
             margin-bottom: 20px;
-
-            @media (max-width:"575px") {
-                position: absolute;
-                bottom: 30px;
-                left: 50%;
-                transform: translateX(-50%) !important;
-            }
 
             .inner-line {
                 width: 150px;
@@ -114,23 +87,17 @@ body {
 
             .red-dot {
                 background-color: #F95E57;
-                width: 15px;
-                height: 15px;
-                border-radius: 50%;
+                @include dot
             }
 
             .yellow-dot {
                 background-color: #FBBC2E;
-                width: 15px;
-                height: 15px;
-                border-radius: 50%;
+                @include dot
             }
 
             .green-dot {
                 background-color: #30C83F;
-                width: 15px;
-                height: 15px;
-                border-radius: 50%;
+                @include dot
             }
         }
 
@@ -140,14 +107,11 @@ body {
 
             span {
                 color: $white;
-                font-size: 2.75rem;
+                white-space: nowrap;
                 font-weight: 200;
             }
-
-
         }
     }
-
 
 
     .cal-btn-part {
@@ -163,7 +127,9 @@ body {
                 color: $white;
                 border: 1px solid $black-light;
                 opacity: 0.8;
-                &:active{
+                font-size: 18px !important;
+
+                &:active {
                     background-color: $grey;
                 }
             }
@@ -173,11 +139,13 @@ body {
                 background-color: $primary;
                 color: $white;
                 border: 1px solid $primary;
-                &:focus{
+
+                &:focus {
                     border: 1px solid $black
                 }
             }
-            .btn-4{
+
+            .btn-4 {
                 @include btn;
                 background-color: $primary;
                 color: $white;
@@ -189,7 +157,8 @@ body {
                 background-color: $grey;
                 color: $white;
                 border: 1px solid $grey;
-                &:active{
+
+                &:active {
                     background-color: rgba($color: $white, $alpha: 0.6);
                 }
             }

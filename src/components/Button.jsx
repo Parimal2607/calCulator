@@ -1,9 +1,10 @@
 import React from "react";
-const Button = ({btnClass, value, ClickFunction, btnValue}) => {
+import CustomSvg from "./common/CustomSvg";
+const Button = ({ btnClass, value, ClickFunction, btnValue, btnIcon }) => {
   return (
     <>
       <button className={btnClass} value={value} onClick={ClickFunction}>
-        {btnValue}
+        {btnIcon ? <CustomSvg icon={btnIcon} /> : btnValue}
       </button>
     </>
   );

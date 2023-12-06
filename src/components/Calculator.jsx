@@ -1,153 +1,143 @@
 import React, { useEffect, useState } from "react";
 import { calVal } from "../utils/constant";
 import Button from "./Button";
+
+const toLocaleString = (num) =>
+  String(num).replace(/(?<!\..*)(\d)(?=(?:\d{3})+(?:\.|$))/g, "$1");
+
+const removeSpaces = (num) => num.toString().replace(/\s/g, "");
+
 const Calculator = () => {
-  const [preState, setPreState] = useState("");
-  const [curState, setCurState] = useState("");
-  const [input, setInput] = useState("0");
-  const [operator, setOperator] = useState(null);
-  const [total, setTotal] = useState(false);
-  const [notNum, setNotNum] = useState(false);
-  const [nan, setNan] = useState(false);
-
-  /**
-   * Generates a function comment for the given function body.
-   *
-   * @param {Event} e - The event object.
-   * @return {void} This function does not return anything.
-   */
-  const inputNum = (e) => {
-    if (curState.includes(".") && e.target.innerText === ".") return;
-    if (total) {
-      setPreState("");
-    }
-
-    curState
-      ? setCurState((pre) => pre + e.target.innerText)
-      : setCurState(e.target.innerText);
-    setTotal(false);
-  };
-
-  useEffect(() => {
-    setInput(curState);
-  }, [curState]);
-
-  useEffect(() => {
-    setInput("0");
-  }, []);
-  /**
-   * Sets the operator type and performs the necessary calculations.
-   *
-   * @param {Event} e - The event object representing the button click
-   * @return {void} This function does not return a value
-   */
-  const operatorType = (e) => {
-    setTotal(false);
-    setOperator(e.target.innerText);
-    if (curState === "") return;
-    if (preState !== "") {
-      equals();
-    } else {
-      setPreState(curState);
-      setCurState("");
+  const [calc, setCalc] = useState({
+    sign: "",
+    num: 0,
+    res: 0,
+  });
+  console.log(calc);
+  const numClickHandler = (e) => {
+    e.preventDefault();
+    const value = e.target.value;
+    if (removeSpaces(calc.num).length < 16) {
+      setCalc({
+        ...calc,
+        num:
+          calc.num === 0 && value === "0"
+            ? "0"
+            : removeSpaces(calc.num) % 1 === 0
+            ? toLocaleString(Number(removeSpaces(calc.num + value)))
+            : toLocaleString(calc.num + value),
+        res: !calc.sign ? 0 : calc.res,
+      });
     }
   };
 
-  /**
-   * Calculates the result of a mathematical operation based on the operator and operands.
-   *
-   * @param {Event} e - The event object.
-   * @return {void} No return value.
-   */
-  const equals = (e) => {
-    // if (e?.target.innerText === "=") {
-    //   setTotal(true);
+  const commaClickHandler = (e) => {
+    e.preventDefault();
+    const value = e.target.value;
 
-    // }
-    let cal;
-    switch (operator) {
-      case "/":
-        cal = String(parseFloat(preState) / parseFloat(curState));
-        if (cal === "Infinity") {
-          setNotNum(true);
-        }
-        if (cal === "NaN") {
-          setNan(true);
-        }
-        break;
+    setCalc({
+      ...calc,
+      num: !calc.num.toString().includes(".") ? calc.num + value : calc.num,
+    });
+  };
 
-      case "+":
-        cal = String(parseFloat(preState) + parseFloat(curState));
-        break;
-      case "X":
-        cal = String(parseFloat(preState) * parseFloat(curState));
-        break;
-      case "-":
-        cal = String(parseFloat(preState) - parseFloat(curState));
-        break;
-      default:
-        return;
+  const signClickHandler = (e,value) => {
+    e.preventDefault();
+
+    console.log(value);
+    setCalc({
+      ...calc,
+      sign: value,
+      res: !calc.res && calc.num ? calc.num : calc.res,
+      num: 0,
+    });
+  };
+
+  const equalsClickHandler = () => {
+    console.log(calc.sign);
+    if (calc.num && !calc.sign) {
+      const accumulatedResult = calc.res + calc.num;
+
+      const cleanedResult = accumulatedResult.replace(/^0+/, "");
+      setCalc({
+        ...calc,
+        res: cleanedResult,
+        sign: "",
+        num: 0,
+      });
     }
-    if (e?.target.innerText === "=") {
-      setTotal(true);
-      setInput("");
-      setPreState(cal);
-    } else {
-      console.log("false");
-      setInput("");
-      setPreState(cal);
-      setCurState("");
+    if (calc.sign && calc.num) {
+      const math = (a, b, sign) =>
+        sign === "+"
+          ? a + b
+          : sign === "-"
+          ? a - b
+          : sign === "X"
+          ? a * b
+          : a / b;
+
+      setCalc((pre) => ({
+        ...calc,
+        res:
+          calc.num === "0" && calc.sign === "/"
+            ? "Can't divide with 0"
+            : toLocaleString(
+                math(
+                  Number(removeSpaces(calc.res)),
+                  Number(removeSpaces(calc.num)),
+                  calc.sign
+                )
+              ),
+        sign: pre.sign,
+        num: Number(pre.num),
+      }));
     }
   };
 
-  /**
-   * Toggles the sign of the current state.
-   *
-   * @param {string} curState - The current state of the calculator.
-   * @return {void} This function does not return a value.
-   */
-  const minusPlus = () => {
-    if (curState.charAt(0) === "-") {
-      setCurState(curState.substring(1));
-    } else {
-      setCurState("-" + curState);
-    }
+  const invertClickHandler = () => {
+    setCalc({
+      ...calc,
+      num: calc.num ? toLocaleString(removeSpaces(calc.num) * -1) : 0,
+      res: calc.res ? toLocaleString(removeSpaces(calc.res) * -1) : 0,
+      sign: "",
+    });
   };
 
-  /**
-   * Updates the current state value by converting it to a percentage.
-   *
-   * @return {void} No return value.
-   */
-  const percent = () => {
-    preState
-      ? setCurState(String((parseFloat(curState) / 100) * preState))
-      : setCurState(String(parseFloat(curState) / 100));
+  const percentClickHandler = () => {
+    let num = calc.num ? parseFloat(removeSpaces(calc.num)) : 0;
+    let res = calc.res ? parseFloat(removeSpaces(calc.res)) : 0;
+
+    setCalc({
+      ...calc,
+      num: (num /= Math.pow(100, 1)),
+      res: (res /= Math.pow(100, 1)),
+      sign: "",
+    });
   };
 
-  /**
-   * Resets the state variables to their initial values.
-   *
-   * @return {void} No return value
-   */
-  const reset = () => {
-    setPreState("");
-    setCurState("");
-    setInput("0");
-    setNotNum(false);
-    setNan(false);
+  const resetClickHandler = () => {
+    setCalc({
+      ...calc,
+      sign: "",
+      num: 0,
+      res: 0,
+    });
   };
+
   const calculateFontSize = () => {
     const baseFontSize = 44;
     const fontSizeMultiplier = 2;
     const maxLength = 5;
     const maxWidth = 234;
 
+    // Calculate the length of the displayed number (remove spaces and get the length)
+    const numLength = removeSpaces(calc.num).length;
+
     const adjustedFontSize =
-      baseFontSize - fontSizeMultiplier * Math.max(input.length - maxLength, 0);
+      baseFontSize - fontSizeMultiplier * Math.max(numLength - maxLength, 0);
 
     // Calculate the adjusted width based on the adjusted font size
-    const adjustedWidth = input.length * (adjustedFontSize / baseFontSize);
+    const adjustedWidth = numLength * (adjustedFontSize / baseFontSize);
 
     // If the adjusted width exceeds the maximum width, further reduce the font size
     if (adjustedWidth > maxWidth) {
@@ -158,29 +148,26 @@ const Calculator = () => {
     // Ensure the font size is not larger than the base font size
     return Math.min(adjustedFontSize, baseFontSize) + "px";
   };
+
   return (
     <div className="calculator">
       <div className="cal-screen pb-0">
         <div className="screen">
-            <div className="upper-dot">
-              <div className="red-dot"></div>
-              <div className="yellow-dot"></div>
-              <div className="green-dot"></div>
-            </div>
+          <div className="upper-dot">
+            <div className="red-dot"></div>
+            <div className="yellow-dot"></div>
+            <div className="green-dot"></div>
+          </div>
           <div className="cal-upper-screen">
-            {!notNum && !nan ? (
-              input !== "" || input === "0" ? (
-                <span style={{ fontSize: calculateFontSize() }}>{input}</span>
-              ) : (
-                <span style={{ fontSize: calculateFontSize() }}>
-                  {preState}
-                </span>
-              )
-            ) : nan ? (
-              <span>NaN</span>
-            ) : (
-              <span>Infinity</span>
-            )}
+            <span style={{ fontSize: calculateFontSize() }}>
+              {typeof calc.res == "string" && typeof calc.num == "string"
+                ? calc.num
+                : typeof calc.res == "number" && typeof calc.num == "string"
+                ? calc.num
+                : typeof calc.res == "string" && typeof calc.num == "number"
+                ? calc.res
+                : calc.num}
+            </span>
           </div>
         </div>
         <div className="cal-btn-part">
@@ -191,22 +178,25 @@ const Calculator = () => {
                 btnClass={val.className}
                 value={val.value}
                 btnValue={val.name}
-                ClickFunction={
+                btnIcon={val.icon}
+                ClickFunction={(e) => {
                   val.value === "AC"
-                    ? reset
+                    ? resetClickHandler(e)
                     : val.value === "+/-"
-                    ? minusPlus
+                    ? invertClickHandler(e)
                     : val.value === "%"
-                    ? percent
-                    : val.value === "/" ||
-                      val.value === "+" ||
-                      val.value === "-" ||
-                      val.value === "X"
-                    ? operatorType
+                    ? percentClickHandler(e)
                     : val.value === "="
-                    ? equals
-                    : inputNum
-                }
+                    ? equalsClickHandler(e)
+                    : val.value === "/" ||
+                      val.value === "X" ||
+                      val.value === "-" ||
+                      val.value === "+"
+                    ? signClickHandler(e,val.value)
+                    : val.value === "."
+                    ? commaClickHandler(e)
+                    : numClickHandler(e);
+                }}
               />
             ))}
           </div>
